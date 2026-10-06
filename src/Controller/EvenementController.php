@@ -9,6 +9,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Service\Store;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
+use Symfony\Contracts\Service\Attribute\Required;
 use function PHPUnit\Framework\isEmpty;
 use function PHPUnit\Framework\isNan;
 
@@ -378,5 +379,51 @@ final class EvenementController extends AbstractController
         ]);
     }
 
+    //Afficher les évènements gratuit d'une certaine catégorie
+
+    #[Route('/evenements/gratuits/{categorie}', name: 'app_evenement_gratuitCategorie', requirements: ['categorie' => '\w+'], methods: ['GET'])]
+    public function gratuitCategorie(String $categorie): Response
+    {
+        $events = $this->store->getEvenement();
+        $eventFiltre = [];
+
+        //Parcours le tableau et extrait uniquement la valeur associé à catégorie pour chaque élément
+        //Résultat : ['festif', 'sportif', 'culturel', 'associatif', 'festif', 'culturel', 'sportif', 'associatif']
+        $categories = array_column($events, 'categorie');
+
+        //On supprime les doublons avec array_unique et on réindexe les indices pour que le tableau reprenne depuis zéro avec array_value
+        $categoriesUniques = array_values(array_unique($categories));
+
+        //Résultat :
+        // $categorieUniques =
+        // [
+        //    0 => 'festif',
+        //    1 => 'sportif',
+        //    2 => 'culturel',
+        //    3 => 'associatif'
+        // ]
+
+
+        //on convertit le paramètre en minuscules comme ça pas de soucis avec les majuscules
+        if(!in_array(strtolower($categorie), $categoriesUniques))
+        {
+            $this->addFlash('danger', 'Catégorie inconnue');
+            return $this->redirectToRoute('app_evenement');
+        }
+
+        foreach ($events as $item)
+        {
+            if($item['prix'] == 0 && $item['categorie'] == $categorie)
+            {
+                $eventFiltre[] = $item;
+            }
+        }
+
+        return $this->render('evenement/gratuitCategorie.html.twig', [
+            'controller_name' => 'EvenementController',
+            'events' => $eventFiltre,
+            'categorie' => $categorie,
+        ]);
+    }
 
 }
