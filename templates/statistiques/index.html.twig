@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello StatistiquesController!{% endblock %}
+
+{% block body %}
+
+<div class="container my-4">
+    <h1 class="mb-4">Nos statistiques : </h1>
+
+    <!-- Carte pour les statistiques globales -->
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <ul class="list-unstyled mb-0 d-flex flex-column gap-2">
+                <li><strong>Prix moyen d'un évènement :</strong> {{ prixMoyen }} €</li>
+                <li><strong>Nombre d'évènements organisés jusqu'à présent :</strong> {{ nbEvent }}</li>
+                <li><strong>Évènements payants :</strong> {{ nbPayant }}</li>
+                <li><strong>Évènements gratuits :</strong> {{ nbGratuit }}</li>
+            </ul>
+        </div>
+    </div>
+
+    <h3 class="mb-3">Répartition par catégorie : </h3>
+
+    <!-- Tableau -->
+
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+        <tr>
+            <th>Catégorie</th>
+            <th>Nombre</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for categorie, nombre in parCategorie %}
+        <tr>
+            <td>{{ categorie }}</td>
+            <td>{{ nombre }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

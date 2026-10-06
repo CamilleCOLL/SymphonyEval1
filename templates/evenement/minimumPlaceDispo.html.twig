@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Évènement selon le nombre minimum de places {% endblock %}
+
+{% block body %}
+    <div class="container my-4">
+        <div class="card mb-4" style="max-width: 600px;">
+            <div class="card-body">
+                <h1 class="mb-4"> {{ events|length }} évènements trouvés pour :</h1>
+                <h4>Minimum de places : {{ minimumPlace }} </h4>
+            </div>
+        </div>
+
+        <div class="d-flex flex-column gap-3">
+            {% for item in events %}
+                {% if (item.places_disponibles/item.places_totales) >= 0.5 %}
+                    <div class="border border-success bg-success-subtle p-3 rounded">
+                        {{ include('components/card_event.html.twig', {e: item}) }}
+                    </div>
+                {% else %}
+                    <div class="border border-warning bg-warning-subtle p-3 rounded">
+                        {{ include('components/card_event.html.twig', {e: item}) }}
+                    </div>
+                {% endif %}
+            {% else %}
+                <p>Aucun évènement trouvé.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

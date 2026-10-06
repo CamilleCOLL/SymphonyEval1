@@ -1,0 +1,51 @@
+<div class="card">
+    <div class="card-body">
+        <h3 class="card-title h4">{{ e.titre }}</h3>
+        <p class="card-text">{{ e.description }}</p>
+
+        <ul class="list-unstyled mb-0">
+            <li><strong>ID :</strong> {{ e.id }}</li>
+            <li><strong>Catégorie :</strong> {{ e.categorie }}</li>
+            <li><strong>Lieu :</strong> {{ e.lieu }}</li>
+            <li><strong>Organisateur :</strong> {{ e.organisateur }}</li>
+            <li><strong>Début :</strong> {{ e.date_debut }}</li>
+            <li><strong>Fin :</strong> {{ e.date_fin }}</li>
+            <li><strong>Prix :</strong>
+                {% if e.prix == 0 %}
+                    Gratuit
+                {% else %}
+                    {{ e.prix }} €
+                {% endif %}
+            </li>
+
+            <!-- Pourcentage et message dynamique de disponibilité -->
+            {% if e.statut == 'ouvert' %}
+                {% set pourcentage = ((e.places_totales - e.places_disponibles) / e.places_totales * 100)|round %}
+
+                <li class="mt-2">
+                    <strong>Remplissage :</strong> {{ pourcentage }} %
+                    <div class="progress my-1" style="height: 8px;">
+                        <div class="progress-bar bg-info" style="width: {{ pourcentage }}%;"></div>
+                    </div>
+                </li>
+
+                <li>
+                    <strong>Disponibilité :</strong>
+                    {% if e.places_disponibles <= 5 %}
+                        <span class="badge bg-warning text-dark">Presque complet ({{ e.places_disponibles }} restant)</span>
+                    {% else %}
+                        <span class="badge bg-success">Encore {{ e.places_disponibles }} places</span>
+                    {% endif %}
+                </li>
+            {% else %}
+                {# Si c'est fermé, complet ou terminé, on affiche juste le badge de statut brut #}
+                <li class="mt-2">
+                    <strong>Statut :</strong>
+                    <span class="badge {% if e.statut == 'complet' %}bg-warning text-dark{% else %}bg-danger{% endif %} text-uppercase">
+            {{ e.statut }}
+                    </span>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>

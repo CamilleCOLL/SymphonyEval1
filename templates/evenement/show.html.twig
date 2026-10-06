@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Évènement - {{ id }}{% endblock %}
+
+{% block body %}
+    <div class="container my-4">
+        <h1 class="mb-4">Évènement {{ id }} :</h1>
+
+        <div class="d-flex flex-column gap-3">
+            {% for item in events %}
+                {{ include('components/card_event.html.twig', {e: item}) }}
+            {% else %}
+                <p>Aucun évènement trouvé.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
