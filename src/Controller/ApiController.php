@@ -52,7 +52,7 @@ final class ApiController extends AbstractController
     }
 
     #[Route('/api/evenements/', name: 'app_api_filtre', methods: ['GET'])]
-    public function apiFiltre(Request $request): Response
+    public function apiFiltre(Request $request): Response    // ou JsonResponse
     {
         $evenement = $this->store->getEvenement();
 
@@ -85,7 +85,7 @@ final class ApiController extends AbstractController
             }
 
         }
-        return $this->json($eventFiltre);
+        return $this->json($eventFiltre); //return new JsonResponse
     }
 
 }

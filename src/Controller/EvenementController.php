@@ -426,4 +426,37 @@ final class EvenementController extends AbstractController
         ]);
     }
 
+    #[Route('/evenements/organisateur/{organisateur}', name: 'app_evenement_organisateur', methods: ['GET'])]
+    public function organisateur(String $organisateur): Response
+    {
+
+        $events = $this->store->getEvenement();
+        $eventFiltre = [];
+
+        $organisateurs = array_column($events, 'organisateur');
+        $organisateurUniques = array_values(array_unique($organisateurs));
+
+        //Verif organ
+        $nouvelleChaine = str_replace("-", " ", $organisateur);
+
+
+        foreach ($events as $item)
+        {
+            if($item['organisateur'] == $nouvelleChaine)
+            {
+                $eventFiltre[] = $item;
+            }
+        }
+
+//        dd($organisateurUniques, $eventFiltre);
+
+        return $this->render('evenement/navigation.html.twig', [
+            'controller_name' => 'EvenementController',
+            'events' => $eventFiltre,
+            'organisateurs' => $organisateurUniques,
+        ]);
+    }
+
+
+
 }
